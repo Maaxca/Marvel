@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAdapter:CharacterAdapter
     private lateinit var mGridLayout:GridLayoutManager
     var retrofit:Retrofit?=null
+    var todos:ArrayList<Superheroes>? =null
+    var i:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,24 +43,35 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerView()
 
+        findViewById<RecyclerView>(R.id.recyclerView).setOnScrollChangeListener(
+            View.OnScrollChangeListener { v, scrollX, scrollY, _, _ ->
+                if (!v.canScrollVertically(1)){
+                    i+=100
+                    obtenerDatos(i.toString())
+                }
+
+            })
+
 }
 
     private fun setupRecyclerView() {
         mAdapter = CharacterAdapter(ArrayList())
         mGridLayout = GridLayoutManager(this, resources.getInteger(R.integer.main_columns))
 
-        obtenerDatos()
+        obtenerDatos(i.toString())
         findViewById<RecyclerView>(R.id.recyclerView).apply {
             setHasFixedSize(true)
             layoutManager = mGridLayout
             adapter = mAdapter
         }
+
     }
 
-    private fun obtenerDatos() {
+    private fun obtenerDatos(of:String) {
         var service:MarvelapiService=retrofit!!.create(MarvelapiService::class.java)
 
-        var marvelRespuestaCall:Call<MarvelRespuesta<DatosRespuesta>> = service.obtenerLista()
+
+        var marvelRespuestaCall:Call<MarvelRespuesta<DatosRespuesta>> = service.obtenerLista(of)
 
         marvelRespuestaCall.enqueue(object:Callback<MarvelRespuesta<DatosRespuesta>>{
             override fun onResponse(call: Call<MarvelRespuesta<DatosRespuesta>>, response: Response<MarvelRespuesta<DatosRespuesta>>) {
@@ -65,7 +79,13 @@ class MainActivity : AppCompatActivity() {
                     var marvelrespuesta :MarvelRespuesta<DatosRespuesta>?=response.body()
                     var datos:ArrayList<Superheroes> =marvelrespuesta!!.data!!.results
 
-                        mAdapter.setStores(datos)
+                    if(of=="0"){
+                        todos=datos
+                    }
+                    else{
+                        todos!!.addAll(datos)
+                    }
+                        mAdapter.setStores(todos!!)
                 }
                 else{
                     Log.i("Hola","nono2")
@@ -76,4 +96,5 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
 }
