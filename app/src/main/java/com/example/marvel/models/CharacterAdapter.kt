@@ -9,9 +9,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.marvel.R
 import com.example.marvel.databinding.ItemBinding
+import com.example.marvel.services.OnClickListener
 import com.squareup.picasso.Picasso
 
-class CharacterAdapter(private var characters:ArrayList<Superheroes>) :
+class CharacterAdapter(private var characters:ArrayList<Superheroes>,private var listener: OnClickListener) :
 RecyclerView.Adapter<CharacterAdapter.ViewHolder>(){
 
     private lateinit var mContext:Context
@@ -29,7 +30,7 @@ RecyclerView.Adapter<CharacterAdapter.ViewHolder>(){
         val character=characters.get(position)
 
         with(holder){
-
+        setListener(character)
             binding.tvName.text=character.name
 
             var url="${character.thumbnail.path}.${character.thumbnail.extension}"
@@ -46,6 +47,15 @@ RecyclerView.Adapter<CharacterAdapter.ViewHolder>(){
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val binding=ItemBinding.bind(view)
+
+        fun setListener(superheroes: Superheroes){
+            with(binding.root){
+                setOnClickListener(){
+                    listener.onDetail(superheroes)
+                    true
+                }
+            }
+        }
 
     }
 

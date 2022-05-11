@@ -1,6 +1,7 @@
 package com.example.marvel.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Superheroes(
     @SerializedName("name")
@@ -9,4 +10,4 @@ data class Superheroes(
     val description:String,
     @SerializedName("thumbnail")
     val thumbnail:ImgRespuesta
-)
+):Serializable

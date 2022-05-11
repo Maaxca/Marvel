@@ -1,37 +1,35 @@
 package com.example.marvel
 
-import android.content.Context
+import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.marvel.marvelapi.MarvelapiService
+import com.example.marvel.services.MarvelapiService
 import com.example.marvel.models.CharacterAdapter
 import com.example.marvel.models.DatosRespuesta
 import com.example.marvel.models.MarvelRespuesta
 import com.example.marvel.models.Superheroes
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import com.example.marvel.services.OnClickListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.Response
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.URL
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var mAdapter:CharacterAdapter
     private lateinit var mGridLayout:GridLayoutManager
     var retrofit:Retrofit?=null
     var todos:ArrayList<Superheroes>? =null
     var i:Int=0
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -46,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<RecyclerView>(R.id.recyclerView).setOnScrollChangeListener(
             View.OnScrollChangeListener { v, scrollX, scrollY, _, _ ->
                 if (!v.canScrollVertically(1)){
+                    findViewById<ProgressBar>(R.id.progressBar).visibility=View.VISIBLE
                     i+=100
                     obtenerDatos(i.toString())
                 }
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 }
 
     private fun setupRecyclerView() {
-        mAdapter = CharacterAdapter(ArrayList())
+        mAdapter = CharacterAdapter(ArrayList(),this)
         mGridLayout = GridLayoutManager(this, resources.getInteger(R.integer.main_columns))
 
         obtenerDatos(i.toString())
@@ -85,16 +84,24 @@ class MainActivity : AppCompatActivity() {
                     else{
                         todos!!.addAll(datos)
                     }
+                    findViewById<ProgressBar>(R.id.progressBar).visibility=View.INVISIBLE
                         mAdapter.setStores(todos!!)
                 }
                 else{
-                    Log.i("Hola","nono2")
+                    Toast.makeText(applicationContext,"Ha habido un error",Toast.LENGTH_LONG).show()
                 }
             }
             override fun onFailure(call: Call<MarvelRespuesta<DatosRespuesta>>, t: Throwable) {
-                Log.i("Hola",t.message.toString())
+                Toast.makeText(applicationContext,"Ha habido un error",Toast.LENGTH_LONG).show()
             }
         })
+    }
+
+    override fun onDetail(superheroes: Superheroes) {
+        val detailIntent= Intent(this, DetailActivity::class.java).apply {
+            putExtra("superheroe",superheroes)
+        }
+        startActivity(detailIntent)
     }
 
 }

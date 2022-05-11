@@ -1,10 +1,8 @@
-package com.example.marvel.marvelapi
+package com.example.marvel.services
 
 import com.example.marvel.models.DatosRespuesta
 import com.example.marvel.models.MarvelRespuesta
 import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
