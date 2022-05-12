@@ -26,15 +26,17 @@
             android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/color_white_t"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:maxLines="1"
+            android:background="#CC000000"
             android:ellipsize="end"
+            android:maxLines="1"
             android:padding="@dimen/common_padding_min"
-            tools:text="Nombre de la tienda"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="#FF0000"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Nombre de la tienda" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

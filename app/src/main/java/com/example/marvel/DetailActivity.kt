@@ -15,7 +15,13 @@ class DetailActivity : AppCompatActivity() {
         val superheroes = intent.getSerializableExtra("superheroe") as? Superheroes
 
         findViewById<TextView>(R.id.NombreTextView).setText(superheroes!!.name)
-        findViewById<TextView>(R.id.DescripcionTextView).setText(superheroes!!.description)
+        if(superheroes!!.description.isEmpty()){
+            findViewById<TextView>(R.id.DescripcionTextView).setText("Description Not Found")
+        }
+        else{
+            findViewById<TextView>(R.id.DescripcionTextView).setText(superheroes!!.description)
+        }
+
 
         var url="${superheroes.thumbnail.path}.${superheroes.thumbnail.extension}"
         var splits=url.split(":")
