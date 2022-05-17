@@ -4,18 +4,14 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.marvel.models.*
 import com.example.marvel.services.MarvelapiService
-import com.example.marvel.models.CharacterAdapter
-import com.example.marvel.models.DatosRespuesta
-import com.example.marvel.models.MarvelRespuesta
-import com.example.marvel.models.Superheroes
 import com.example.marvel.services.OnClickListener
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,7 +37,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         setupRecyclerView()
 
-        findViewById<RecyclerView>(R.id.recyclerView).setOnScrollChangeListener(
+        findViewById<RecyclerView>(R.id.my_recycler_view).setOnScrollChangeListener(
             View.OnScrollChangeListener { v, scrollX, scrollY, _, _ ->
                 if (!v.canScrollVertically(1)){
                     findViewById<ProgressBar>(R.id.progressBar).visibility=View.VISIBLE
@@ -58,7 +54,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         mGridLayout = GridLayoutManager(this, resources.getInteger(R.integer.main_columns))
 
         obtenerDatos(i.toString())
-        findViewById<RecyclerView>(R.id.recyclerView).apply {
+        findViewById<RecyclerView>(R.id.my_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = mGridLayout
             adapter = mAdapter
@@ -103,5 +99,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
         startActivity(detailIntent)
     }
+
+    override fun onDetailComics(superheroes: DatosComics) {
+        TODO("Not yet implemented")
+    }
+
 
 }
